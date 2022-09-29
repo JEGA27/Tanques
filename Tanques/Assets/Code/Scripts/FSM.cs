@@ -17,7 +17,7 @@ public class FSM : MonoBehaviour
     public GameObject bullet;
     public Transform playerTransform;
     public GameObject bulletSpawnPoint;
-    public GameObject turretBase;
+    public Transform turretBase;
     public List<GameObject> pointList;
     public float curSpeed;
     public float rotSpeed = 150.0f;
@@ -46,7 +46,7 @@ public class FSM : MonoBehaviour
     }
     private void FindPlayer()
     {
-        print("Finding player");
+        //print("Finding player");
         destPos = playerTransform.position;
     }
 
@@ -112,15 +112,18 @@ public class FSM : MonoBehaviour
         }
         FindPlayer();
         Quaternion TurretRotation = Quaternion.LookRotation(pointList[0].transform.position - transform.position);
-        turretBase.transform.rotation = TurretRotation;
+        turretBase.rotation = TurretRotation;
         Quaternion targetRotation = Quaternion.LookRotation(destPos - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotSpeed);
         transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
     }
-
     void UpdateAim()
     {
-
+        Debug.DrawRay(turretBase.position, destPos, Color.red);
+        FindPlayer();
+        Quaternion targetRotation = Quaternion.LookRotation(destPos - turretBase.position);
+        turretBase.rotation = Quaternion.Slerp(turretBase.rotation, targetRotation, Time.deltaTime * rotSpeed);
+        //currentState = FSMStates.Shoot;
     }
 
     void UpdateShoot()

@@ -506,6 +506,7 @@ MonoBehaviour:
   bullet: {fileID: 5512321803092707746, guid: 07f2c6ed9fd64114ea5495ec5e93efaa, type: 3}
   playerTransform: {fileID: 241088202}
   bulletSpawnPoint: {fileID: 1441818739}
+  turretBase: {fileID: 1782831367}
   pointList:
   - {fileID: 1703705755}
   - {fileID: 92511275}
@@ -518,7 +519,6 @@ MonoBehaviour:
   maxBackwardSpeed: -30
   shootRate: 0.5
   patrolRadius: 1
-  patrolReachPlayer: 3
   chaseRadius: 10
   AttackRadius: 7
 --- !u!1 &1670179327
@@ -712,6 +712,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703705755}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1782831367 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4008742702336861466, guid: 8ed347b4b597ab14db52af191bcf71b5, type: 3}
+  m_PrefabInstance: {fileID: 1441818737}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1812023755
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,6 +952,14 @@ PrefabInstance:
     - target: {fileID: 2271679292463979608, guid: cc3e679ee4d30b34faee6dfa905e342e, type: 3}
       propertyPath: m_TagString
       value: Tank
+      objectReference: {fileID: 0}
+    - target: {fileID: 2271679292463979612, guid: cc3e679ee4d30b34faee6dfa905e342e, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2271679292463979612, guid: cc3e679ee4d30b34faee6dfa905e342e, type: 3}
+      propertyPath: m_Size.z
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2271679292463979614, guid: cc3e679ee4d30b34faee6dfa905e342e, type: 3}
       propertyPath: m_RootOrder
