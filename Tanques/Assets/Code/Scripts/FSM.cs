@@ -31,6 +31,8 @@ public class FSM : MonoBehaviour
     public float chaseRadius = 25f;
     public float AttackRadius = 20f;
     private int index = -1;
+    private bool underAttack = false;
+    private bool sideFlag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -110,9 +112,13 @@ public class FSM : MonoBehaviour
             print("player out of sight");
             currentState = FSMStates.Patrol;
         }
+        else if(underAttack)
+        {
+            print("under attack");
+            sideFlag = System.Convert.ToBoolean(Random.Range(0, 2));
+            currentState = FSMStates.Evade;
+        }
         FindPlayer();
-        Quaternion TurretRotation = Quaternion.LookRotation(pointList[0].transform.position - transform.position);
-        turretBase.rotation = TurretRotation;
         Quaternion targetRotation = Quaternion.LookRotation(destPos - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotSpeed);
         transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
@@ -123,21 +129,71 @@ public class FSM : MonoBehaviour
         FindPlayer();
         Quaternion targetRotation = Quaternion.LookRotation(destPos - turretBase.position);
         turretBase.rotation = Quaternion.Slerp(turretBase.rotation, targetRotation, Time.deltaTime * rotSpeed);
-        //currentState = FSMStates.Shoot;
+        elapsedTime += Time.deltaTime;
+        if(elapsedTime >= 1.0f)
+        {
+          currentState = FSMStates.Shoot;
+        }
+
     }
 
     void UpdateShoot()
     {
 
+      elapsedTime += Time.deltaTime;
+      if(elapsedTime >= shootRate)
+      {
+          elapsedTime = 0.0f;
+          Instantiate(bullet, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
+      }
+      else
+      {
+          currentState = FSMStates.Chase;
+      }
     }
 
     void UpdateEvade()
     {
+        Vector3 lastPos = transform.position;
+        Vector3 newPos;
+        Vector3 evadePos;
+        elapsedTime += Time.deltaTime;
 
+        if(sideFlag)
+        {
+          Debug.Log("Right");
+          evadePos = transform.right * 3;
+          Quaternion targetRotation = Quaternion.LookRotation(evadePos - transform.position);
+          transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotSpeed);
+          transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+        }
+        else
+        {
+          Debug.Log("Left");
+          evadePos = transform.right * 5;
+          Quaternion targetRotation = Quaternion.LookRotation(-evadePos - transform.position);
+          transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotSpeed);
+          transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+        }
+
+        if(elapsedTime >= 2.0f)
+        {
+            currentState = FSMStates.Chase;
+            underAttack = false;
+            elapsedTime = 0f;
+        }
     }
 
-    private void FixedUpdate() 
+    void OnCollisionEnter(Collision collision)
     {
-        
+        if(collision.gameObject.tag == "Bullet")
+        {
+            underAttack = true;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+
     }
 }
